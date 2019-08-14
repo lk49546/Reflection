@@ -24,8 +24,9 @@ public class Mopex {
 		Class<?> cls = obj.getClass();
 		List<Field> accum = new ArrayList<>();
 		while (cls != null) {
-			accum.addAll(Arrays.asList(cls.getDeclaredFields()).stream()
+			accum.addAll(Arrays.stream(cls.getDeclaredFields())
 					.filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toUnmodifiableList()));
+			cls = cls.getSuperclass();
 		}
 		return accum.toArray(new Field[] {});
 	}
