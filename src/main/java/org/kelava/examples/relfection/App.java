@@ -23,7 +23,7 @@ public class App {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		Array.newInstance(String.class, new int[] {2, 3});
-		Array.newInstance(String[].class, new int[] {2, 3});
+		Array.newInstance(String.class, 2, 3);
+		Array.newInstance(String[].class, 2, 3);
 	}
 }
