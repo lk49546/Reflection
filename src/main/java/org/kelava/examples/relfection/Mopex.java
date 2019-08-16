@@ -20,8 +20,7 @@ public class Mopex {
 		}
 	}
 
-	public static Field[] getInstanceVariables(Object obj) {
-		Class<?> cls = obj.getClass();
+	public static Field[] getInstanceVariables(Class<?> cls) {
 		List<Field> accum = new ArrayList<>();
 		while (cls != null) {
 			accum.addAll(Arrays.stream(cls.getDeclaredFields())

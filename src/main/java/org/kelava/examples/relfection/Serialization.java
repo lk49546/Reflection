@@ -1,9 +1,13 @@
 package org.kelava.examples.relfection;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jdom2.Document;
@@ -72,6 +76,38 @@ public class Serialization {
 			}
 		}
 		return target;
+	}
+	
+	public static Object deserializeObject(Document source) {
+		List<Element> objList = source.getRootElement().getChildren();
+		Map<String, Object> table = new HashMap<>();
+		createInstances(table, objList);
+		assignFieldValues(table, objList);
+		return table.get("0");
+	}
+	
+	private static void assignFieldValues(Map<String, Object> table, List<Element> objList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static void createInstances(Map<String, Object> table, List<Element> objList) throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		for (Element element : objList) {
+			Class<?> cls = Class.forName(element.getAttributeValue("class"));
+			Object instance = null;
+			if (!cls.isArray()) {
+				Constructor<?> constructor = cls.getDeclaredConstructor();
+				if (!Modifier.isPublic(constructor.getModifiers())) {
+					constructor.setAccessible(true);
+				}
+				instance = constructor.newInstance();
+			}
+			else {
+				instance = Array.newInstance(cls.getComponentType(), Integer.parseInt(element.getAttributeValue("length")));
+			}
+			table.put(element.getAttributeValue("id"), instance);
+		}
 	}
 
 }
